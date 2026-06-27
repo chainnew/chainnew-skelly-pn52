@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chain.new receipt",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "event",
+    "subject",
+    "decision",
+    "inputs_hash",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "receipt_id": { "type": "string", "minLength": 1 },
+    "event": { "type": "string", "minLength": 1 },
+    "subject": { "type": "string", "minLength": 1 },
+    "decision": { "enum": ["allow", "deny", "require_approval", "observe"] },
+    "policy_id": { "type": ["string", "null"] },
+    "inputs_hash": { "type": "string" },
+    "previous_receipt_hash": { "type": ["string", "null"] },
+    "receipt_hash": { "type": "string", "pattern": "^sha384:" },
+    "signature": {
+      "type": ["object", "null"],
+      "required": ["alg", "key_id", "sig_ref"],
+      "properties": {
+        "alg": { "type": "string" },
+        "key_id": { "type": "string" },
+        "sig_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
