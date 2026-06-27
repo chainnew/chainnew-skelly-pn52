@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "volume_id": "urn:uuid:00000000-0000-4000-8000-000000000001",
+  "data_plane": {
+    "cipher": "AES-256-XTS",
+    "sector_size": 4096,
+    "integrity": "none"
+  },
+  "keyslots": [
+    {
+      "slot": 0,
+      "type": "passphrase-argon2id",
+      "status": "active"
+    },
+    {
+      "slot": 1,
+      "type": "tpm2-pcr-policy",
+      "status": "planned",
+      "pcrs": [
+        7,
+        11
+      ]
+    },
+    {
+      "slot": 2,
+      "type": "hybrid-kms",
+      "status": "future",
+      "classical": "x25519",
+      "pqc": "ml-kem-768",
+      "combiner": "hkdf-sha384"
+    }
+  ],
+  "signatures": [
+    {
+      "alg": "ml-dsa-65",
+      "status": "future"
+    }
+  ]
+}

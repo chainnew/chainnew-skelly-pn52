@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Rust
+/target
+**/*.rs.bk
+*.pdb
+
+# Generated build artifacts and hashes
+ARTIFACTS*
+hashes/
+*.sha256
+*.zip
+
+# Editor / IDE noise
+.idea/
+.vscode/
+*.swp
+*~
+
+# Temporary / logs
+*.log
+tmp/
+*.tmp
+
+# Keep .cargo/config.toml committed (contains important target flags)
+# but ignore local user overrides if they ever appear
+.cargo/config.local.toml

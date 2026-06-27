@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "policy_id": "pn52-lab-boot-v1",
+  "minimum_version": 1,
+  "secure_boot": {
+    "required": false,
+    "allowed_db_fingerprints": []
+  },
+  "measurements": {
+    "pcrs": [
+      0,
+      7,
+      11
+    ],
+    "boot_manifest_hash": "sha384:TODO"
+  },
+  "rollback_protection": {
+    "mode": "kms_minimum_policy_version"
+  },
+  "signatures": [
+    {
+      "alg": "ecdsa-p384",
+      "status": "transition"
+    },
+    {
+      "alg": "ml-dsa-65",
+      "status": "future"
+    }
+  ]
+}

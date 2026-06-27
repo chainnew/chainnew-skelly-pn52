@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chain.new hyper-slate boot policy",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "minimum_version",
+    "secure_boot",
+    "measurements",
+    "signatures"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "policy_id": {
+      "type": "string"
+    },
+    "minimum_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "secure_boot": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "allowed_db_fingerprints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "measurements": {
+      "type": "object",
+      "properties": {
+        "pcrs": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "boot_manifest_hash": {
+          "type": "string"
+        }
+      }
+    },
+    "rollback_protection": {
+      "type": "object"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

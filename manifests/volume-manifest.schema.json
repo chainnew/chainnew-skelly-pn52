@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chain.new hyper-slate volume manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "volume_id",
+    "data_plane",
+    "keyslots"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "volume_id": {
+      "type": "string"
+    },
+    "data_plane": {
+      "type": "object",
+      "required": [
+        "cipher"
+      ],
+      "properties": {
+        "cipher": {
+          "enum": [
+            "AES-256-XTS"
+          ]
+        },
+        "sector_size": {
+          "type": "integer"
+        }
+      }
+    },
+    "keyslots": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

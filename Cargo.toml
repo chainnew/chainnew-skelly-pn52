@@ -1,0 +1,34 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/hyper-slate-core",
+    "crates/hyper-pn52",
+    "crates/hyper-x86",
+    "crates/hyper-amd-svm",
+    "crates/hyper-storage",
+    "apps/hyper-pn52-doctor",
+    "apps/hyper-uefi-probe",
+    "apps/hyper-slate-kms-prototype",
+]
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+authors = ["chain.new lab"]
+rust-version = "1.84"
+
+[workspace.dependencies]
+bitflags = "2"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+sha2 = "0.10"
+hex = "0.4"
+log = "0.4"
+spin = "0.9"
+heapless = "0.8"
+uefi = "0.37"
+uefi-services = "0.25"
+x86_64 = "0.15"
+acpi = "5"

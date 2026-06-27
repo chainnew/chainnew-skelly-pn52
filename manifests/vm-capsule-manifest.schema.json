@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chain.new hyper-slate VM capsule manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "vm_id",
+    "image_hash",
+    "unlock_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "vm_id": {
+      "type": "string"
+    },
+    "image_hash": {
+      "type": "string"
+    },
+    "required_measurements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unlock_policy": {
+      "type": "object"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

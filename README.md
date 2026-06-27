@@ -67,4 +67,3 @@ scripts/                    lab collection, QEMU, LUKS examples, hashing
 ```text
 First prove. Then boot. Then virtualize. Then encrypt. Then attest. Then scale.
 ```
-# chainnew-skelly-pn52
