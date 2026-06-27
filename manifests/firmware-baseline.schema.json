@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chain.new/schemas/firmware-baseline.schema.json",
+  "title": "chain.new hyper-slate firmware baseline",
+  "description": "Captured, attestable firmware ground truth for a single PN52 board. Recorded read-only; never written back to SPI. spi_sha256, module_hashes_sha256, pcr0 and pcr7 are lowercase hex SHA-256 digests (chipsec / sha256sum output).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "board_id",
+    "bios_vendor",
+    "bios_version",
+    "spi_sha256",
+    "module_hashes_sha256",
+    "chipsec",
+    "secure_boot",
+    "ftpm",
+    "pcr0",
+    "pcr7",
+    "captured_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "board_id": {
+      "type": "string",
+      "description": "Stable board identifier (SMBIOS baseboard product / serial)."
+    },
+    "bios_vendor": {
+      "type": "string"
+    },
+    "bios_version": {
+      "type": "string"
+    },
+    "spi_sha256": {
+      "type": "string",
+      "description": "SHA-256 of the full SPI flash image dump.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "module_hashes_sha256": {
+      "type": "object",
+      "description": "Map of firmware module / region name to its SHA-256 digest.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "chipsec": {
+      "type": "object",
+      "description": "Selected CHIPSEC platform-lock results.",
+      "additionalProperties": false,
+      "required": [
+        "bios_wp",
+        "spi_lock",
+        "smm_lock"
+      ],
+      "properties": {
+        "bios_wp": {
+          "type": "boolean",
+          "description": "BIOS write protection (BIOSWE/BLE/SMM_BWP) enforced."
+        },
+        "spi_lock": {
+          "type": "boolean",
+          "description": "SPI flash controller configuration locked (FLOCKDN)."
+        },
+        "smm_lock": {
+          "type": "boolean",
+          "description": "SMRAM / SMM locked (D_LCK)."
+        }
+      }
+    },
+    "secure_boot": {
+      "type": "boolean",
+      "description": "UEFI Secure Boot enabled at capture time."
+    },
+    "ftpm": {
+      "type": "boolean",
+      "description": "AMD fTPM present and enabled."
+    },
+    "pcr0": {
+      "type": "string",
+      "description": "TPM PCR[0] (firmware code) SHA-256 value.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "pcr7": {
+      "type": "string",
+      "description": "TPM PCR[7] (Secure Boot policy) SHA-256 value.",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 timestamp recorded by the capture tool (data field; not used to derive any runtime identifier)."
+    }
+  }
+}

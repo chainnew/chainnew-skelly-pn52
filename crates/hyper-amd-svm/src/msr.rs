@@ -18,6 +18,7 @@ pub unsafe fn rdmsr(msr: u32) -> u64 {
 
 #[cfg(not(target_arch = "x86_64"))]
 pub unsafe fn rdmsr(_msr: u32) -> u64 {
+    unimplemented!("x86_64 only")
     panic!("rdmsr is only available on x86_64 targets")
 }
 
@@ -37,4 +38,9 @@ pub unsafe fn wrmsr(msr: u32, val: u64) {
 #[cfg(not(target_arch = "x86_64"))]
 pub unsafe fn wrmsr(_msr: u32, _val: u64) {
     panic!("wrmsr is only available on x86_64 targets")
+}
+
+#[cfg(not(target_arch = "x86_64"))]
+pub unsafe fn wrmsr(_msr: u32, _val: u64) {
+    unimplemented!("x86_64 only")
 }

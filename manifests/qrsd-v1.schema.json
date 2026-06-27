@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chain.new/hyper-slate/manifests/qrsd-v1.schema.json",
+  "title": "chain.new hyper-slate QRSE disk manifest (qrsd-v1)",
+  "description": "Algorithm-agile, downgrade-resistant storage control-plane manifest per PAD-QRSE-001 §9.5, as implemented by the hyper-qrse crate. The data plane stays boring (AES-256-XTS); the control plane is quantum-ready. This schema mirrors the hyper_qrse::manifest::QrsdManifest serde shape exactly.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "volume_id", "created_at", "data_plane", "boot_policy", "key_hierarchy", "audit"],
+  "properties": {
+    "format": { "const": "qrsd-v1" },
+    "volume_id": { "type": "string" },
+    "created_at": { "type": "string", "description": "RFC3339 timestamp (caller-supplied; the crate treats it as an opaque string)." },
+    "data_plane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cipher", "xts_raw_key_bits", "sector_size", "integrity"],
+      "properties": {
+        "cipher": { "type": "string", "examples": ["AES-256-XTS"] },
+        "xts_raw_key_bits": { "type": "integer", "examples": [512] },
+        "sector_size": { "type": "integer", "examples": [4096] },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "type": "string", "examples": ["none", "dm-integrity-aead"] },
+            "alternatives": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "boot_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "secure_boot_required", "measured_boot_required", "pcr_profile", "minimum_boot_manifest_version", "rollback_protection"],
+      "properties": {
+        "policy_id": { "type": "string" },
+        "secure_boot_required": { "type": "boolean" },
+        "measured_boot_required": { "type": "boolean" },
+        "pcr_profile": { "type": "array", "items": { "type": "string" } },
+        "minimum_boot_manifest_version": { "type": "integer", "minimum": 0, "description": "Monotonic floor used for downgrade/replay protection (PAD §16.2)." },
+        "rollback_protection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "counter_name"],
+          "properties": {
+            "type": { "type": "string", "examples": ["tpm-nv-counter-or-kms-monotonic"] },
+            "counter_name": { "type": "string" }
+          }
+        }
+      }
+    },
+    "key_hierarchy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["volume_master_key_version", "active_dek_version", "keyslots"],
+      "properties": {
+        "volume_master_key_version": { "type": "integer", "minimum": 0 },
+        "active_dek_version": { "type": "integer", "minimum": 0 },
+        "keyslots": { "type": "array", "items": { "$ref": "#/$defs/keyslot" } }
+      }
+    },
+    "signatures": { "type": "array", "items": { "$ref": "#/$defs/signature" } },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["last_rotation", "last_attested_unlock_receipt", "log_chain"],
+      "properties": {
+        "last_rotation": { "type": "string" },
+        "last_attested_unlock_receipt": { "type": "string" },
+        "log_chain": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "kem_suite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classical", "pqc", "combiner"],
+      "properties": {
+        "classical": { "type": "string", "examples": ["x25519"] },
+        "pqc": { "type": "string", "examples": ["ml-kem-768", "ml-kem-1024"] },
+        "combiner": { "type": "string", "examples": ["hkdf-sha384"] }
+      }
+    },
+    "keyslot": {
+      "type": "object",
+      "description": "Algorithm-agile keyslot. `kind` is the serde discriminator (internally tagged + flattened) selecting the kind-specific fields.",
+      "required": ["slot", "status", "kind"],
+      "properties": {
+        "slot": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["active", "disabled_until_break_glass", "retired"] },
+        "kind": { "enum": ["argon2id_passphrase", "tpm2_sealed", "hybrid_remote_kms", "threshold_recovery"] }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "kind": { "const": "argon2id_passphrase" },
+            "kdf": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["algorithm", "memory_kib", "time_cost", "parallelism"],
+              "properties": {
+                "algorithm": { "const": "argon2id" },
+                "memory_kib": { "type": "integer" },
+                "time_cost": { "type": "integer" },
+                "parallelism": { "type": "integer" }
+              }
+            },
+            "wrap": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["algorithm", "wrapped_key_ref"],
+              "properties": {
+                "algorithm": { "type": "string" },
+                "wrapped_key_ref": { "type": "string" }
+              }
+            }
+          },
+          "required": ["kdf", "wrap"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "tpm2_sealed" },
+            "pcrs": { "type": "array", "items": { "type": "string" } },
+            "requires_pin": { "type": "boolean" },
+            "signed_pcr_policy": { "type": "boolean" }
+          },
+          "required": ["pcrs", "requires_pin", "signed_pcr_policy"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "hybrid_remote_kms" },
+            "kem": { "$ref": "#/$defs/kem_suite" },
+            "attestation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["required", "accepted_tee", "measurement_policy_ref"],
+              "properties": {
+                "required": { "type": "boolean" },
+                "accepted_tee": { "type": "array", "items": { "type": "string" } },
+                "measurement_policy_ref": { "type": "string" }
+              }
+            }
+          },
+          "required": ["kem", "attestation"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "threshold_recovery" },
+            "scheme": { "type": "string", "examples": ["shamir"] },
+            "m": { "type": "integer" },
+            "n": { "type": "integer" }
+          },
+          "required": ["scheme", "m", "n"]
+        }
+      ]
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["purpose", "algorithm", "key_id", "signature_ref"],
+      "properties": {
+        "purpose": { "type": "string", "examples": ["disk-manifest", "classical-compatibility"] },
+        "algorithm": { "type": "string", "examples": ["ml-dsa-65", "slh-dsa-128s", "ecdsa-p384"] },
+        "key_id": { "type": "string" },
+        "signature_ref": { "type": "string", "description": "Hex-encoded detached signature bytes." },
+        "status": { "type": "string", "examples": ["transition-only"] },
+        "not_after": { "type": "string" }
+      }
+    }
+  }
+}

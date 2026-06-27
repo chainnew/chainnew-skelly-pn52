@@ -64,6 +64,57 @@ manifests/                  JSON schemas and sample boot/volume/VM manifests
 scripts/                    lab collection, QEMU, LUKS examples, hashing
 ```
 
+## Slate Runtime (virtual framework)
+
+The `slate-runtime` is the host-testable virtual framework that models the full
+VM lifecycle before it touches AMD SVM on real hardware. It is a 12-layer stack
+of plain `std` crates (deny-by-default, fail-closed, typed lifecycle,
+hash-chained receipts). V0 (this commit) is implemented and host-testable; V1+
+bind the same contracts to the `hyper-x86` / `hyper-amd-svm` substrate on a real
+PN52. See `docs/09_virtual_framework.md`.
+
+```text
+crates/
+  hyper-mm/                 guest memory model + NPT orchestration (S2 invariants)
+  hyper-vcpu/               vCPU runtime, scheduler, fail-closed VM-exit dispatch
+  hyper-devices/            virtual device bus (MMIO/port routing, deny-by-default)
+  hyper-virtio/             virtio device models (console, blk, rng, net, pvclock)
+  hyper-net/                policy-first virtual network (egress default-deny)
+  hyper-capsule/            capsule manifest parse + Untrusted/Verified split
+  hyper-policy/             deny-by-default policy engine + policy-as-code
+  hyper-attest/             TPM/fTPM PCR capture, KMS unlock sim, attested release
+  hyper-receipts/           audit spine: hash-chained receipts + security log
+  hyper-vm/                 keystone: VmCapsule + typed lifecycle state machine
+  hyper-control/            control plane / orchestration over lifecycle + audit
+manifests/
+  firmware-baseline.schema.json   captured PN52 firmware ground truth
+```
+
+## QRSE control plane
+
+QRSE (quantum-resistant storage encryption) is the algorithm-agile storage
+control plane (PAD-QRSE-001). Doctrine: the data plane stays boring
+(AES-256-XTS), the control plane becomes quantum-ready — a hybrid
+HKDF-SHA384(X25519 ‖ ML-KEM) KEK combiner with context/suite binding,
+algorithm-agile `qrsd-v1` keyslots (argon2id / tpm2 / hybrid-kms / threshold),
+an Org→Tenant→Device→KMS→VMK→DEK key hierarchy, downgrade protection
+(monotonic version + suite binding + reject classical-only), and ML-DSA /
+SLH-DSA signed manifests released under attestation. Level 1 + Level 2 are
+host-testable here; real RustCrypto ML-KEM/ML-DSA and FIPS validation are
+Level 3, swappable behind the `Kem`/`Signer`/`Verifier` traits.
+
+```text
+crates/
+  hyper-qrse/               crypto traits, hybrid KEK combiner, keyslots, manifests
+apps/
+  qrsectl/                  operator CLI over qrsd-v1 manifests + unlock flow
+manifests/
+  qrsd-v1.schema.json       QRSE disk manifest schema (PAD §9.5)
+  sample.qrsd-v1.json       filled example (X25519+ML-KEM-768, ML-DSA-65, AES-256-XTS)
+docs/
+  10_qrse_architecture.md   QRSE control-plane doctrine and flows
+```
+
 ## Engineering mantra
 
 ```text
