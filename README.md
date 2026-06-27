@@ -28,6 +28,8 @@ less docs/01_architecture.md
 less docs/05_lab_safety.md
 less docs/06_virtual_framework.md
 less docs/07_defensive_controls.md
+less docs/09_framework_build_plan.md
+less docs/10_quantum_resistant_storage_plan.md
 
 # 2. Install Rust targets.
 rustup target add x86_64-unknown-uefi
@@ -36,13 +38,19 @@ rustup target add x86_64-unknown-none
 # 3. Build host tooling.
 cargo build -p hyper-pn52-doctor
 
-# 4. Build UEFI probe once dependencies are fetched.
+# 4. Check the first virtual framework slice.
+cargo test -p hyper-receipts
+cargo test -p hyper-policy
+cargo test -p hyper-capsule
+cargo check -p hyper-vm
+
+# 5. Build UEFI probe once dependencies are fetched.
 cargo build -p hyper-uefi-probe --target x86_64-unknown-uefi
 
-# 5. Collect PN52 ground truth from Linux live USB.
+# 6. Collect PN52 ground truth from Linux live USB.
 sudo scripts/collect_stage_b.sh /mnt/usb/pn52-research
 
-# 6. Read-only SPI collection only after lab rules are met.
+# 7. Read-only SPI collection only after lab rules are met.
 sudo scripts/dump_spi_readonly.sh /mnt/usb/pn52-research/firmware
 ```
 
@@ -59,6 +67,10 @@ crates/
   hyper-x86/                no_std x86 substrate: CPU, paging, APIC, PCI
   hyper-amd-svm/            no_std AMD SVM/VMCB/NPT/IOMMU skeleton
   hyper-storage/            encrypted-storage metadata and PQC/hybrid wrapping model
+  hyper-receipts/           hash-chained audit receipt primitives
+  hyper-policy/             launch policy decisions and deny reasons
+  hyper-capsule/            .chainvm untrusted/verified manifest split
+  hyper-vm/                 typed VM lifecycle transitions
 docs/                       architecture, roadmap, threat model, test plan
 manifests/                  JSON schemas and sample boot/volume/VM manifests
 scripts/                    lab collection, QEMU, LUKS examples, hashing
