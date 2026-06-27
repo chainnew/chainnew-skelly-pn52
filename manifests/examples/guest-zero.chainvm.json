@@ -1,0 +1,37 @@
+{
+  "schema": "chain.vm_capsule.v1",
+  "capsule_id": "guest-zero-hlt-loop",
+  "vm_id": "guest-zero",
+  "image_hash": "sha384:replace-with-image-hash",
+  "disk_hash": "sha384:replace-with-disk-hash",
+  "hypervisor_min_version": 1,
+  "boot_policy_version": 1,
+  "devices": {
+    "passthrough": [],
+    "virtio": ["console"]
+  },
+  "memory": {
+    "max_mb": 64,
+    "allow_balloon": false
+  },
+  "cpu": {
+    "vcpus": 1,
+    "cpuid_profile": "masked_zen3_guest_v1"
+  },
+  "network": {
+    "mode": "none",
+    "egress_policy": "deny_by_default"
+  },
+  "storage": {
+    "cipher": "aes-256-xts",
+    "integrity": "manifest_hash_only",
+    "key_version": 1
+  },
+  "signatures": [
+    {
+      "alg": "ed25519",
+      "key_id": "lab-signing-key-placeholder",
+      "status": "active"
+    }
+  ]
+}
