@@ -5,5 +5,5 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-bitflags.workspace = true
+bitflags = { workspace = true, default-features = false }
 hyper-x86 = { path = "../hyper-x86" }
