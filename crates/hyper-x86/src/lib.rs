@@ -23,3 +23,8 @@ pub unsafe fn halt_forever() -> ! {
         core::hint::spin_loop();
     }
 }
+
+#[cfg(not(target_arch = "x86_64"))]
+pub unsafe fn halt_forever() -> ! {
+    unimplemented!("x86_64 only")
+}

@@ -8,3 +8,8 @@ license.workspace = true
 hex.workspace = true
 serde.workspace = true
 sha2.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+sha2.workspace = true
+hex.workspace = true
+thiserror.workspace = true

@@ -9,3 +9,13 @@ hyper-capsule = { path = "../hyper-capsule" }
 hyper-policy = { path = "../hyper-policy" }
 hyper-receipts = { path = "../hyper-receipts" }
 serde.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+thiserror.workspace = true
+hyper-vcpu = { path = "../hyper-vcpu" }
+hyper-mm = { path = "../hyper-mm" }
+hyper-devices = { path = "../hyper-devices" }
+hyper-policy = { path = "../hyper-policy" }
+hyper-capsule = { path = "../hyper-capsule" }
+hyper-receipts = { path = "../hyper-receipts" }
+hyper-attest = { path = "../hyper-attest" }

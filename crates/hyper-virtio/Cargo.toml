@@ -1,0 +1,10 @@
+[package]
+name = "hyper-virtio"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+hyper-devices = { path = "../hyper-devices" }
+hyper-mm = { path = "../hyper-mm" }

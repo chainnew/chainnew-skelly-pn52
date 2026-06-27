@@ -7,3 +7,9 @@ license.workspace = true
 [dependencies]
 hyper-receipts = { path = "../hyper-receipts" }
 serde.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+thiserror.workspace = true
+sha2.workspace = true
+hex.workspace = true
+hyper-slate-core = { path = "../hyper-slate-core" }

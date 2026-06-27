@@ -29,3 +29,12 @@ KEK = HKDF-SHA384(
 ```
 
 Hard rule: reject downgrade from hybrid to classical-only after a volume policy marks hybrid as required.
+
+## QRSE implementation
+
+This control plane is implemented host-testable in the `hyper-qrse` crate: the
+hybrid HKDF-SHA384(X25519 ‖ ML-KEM) combiner with context/suite binding,
+algorithm-agile `qrsd-v1` keyslots, the Org→Tenant→Device→KMS→VMK→DEK key
+hierarchy, downgrade protection, and ML-DSA / SLH-DSA signed manifests released
+under attestation. See `docs/10_qrse_architecture.md` and the
+`manifests/qrsd-v1.schema.json` schema for details.
