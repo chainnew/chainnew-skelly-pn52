@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chain.new Slate Runtime VM capsule manifest (chain.vm_capsule.v1)",
+  "description": "Runtime capsule manifest consumed by hyper-capsule. Distinct from the older schema_version=1 capsule shape; this is the .chainvm runtime format (SOW Part B §4).",
+  "type": "object",
+  "required": [
+    "schema",
+    "vm_id",
+    "tenant_id",
+    "image_hash",
+    "disk_hash",
+    "hypervisor_min_version",
+    "boot_policy_version",
+    "devices",
+    "memory",
+    "cpu",
+    "network",
+    "storage",
+    "signatures"
+  ],
+  "properties": {
+    "schema": { "const": "chain.vm_capsule.v1" },
+    "vm_id": { "type": "string" },
+    "tenant_id": { "type": "string" },
+    "image_hash": { "type": "string", "pattern": "^sha384:[0-9a-f]+$" },
+    "disk_hash": { "type": "string", "pattern": "^sha384:[0-9a-f]+$" },
+    "hypervisor_min_version": { "type": "integer", "minimum": 0 },
+    "boot_policy_version": { "type": "integer", "minimum": 0 },
+    "devices": {
+      "type": "object",
+      "required": ["passthrough", "virtio"],
+      "properties": {
+        "passthrough": { "type": "array", "items": { "type": "string" } },
+        "virtio": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "required": ["max_mb", "allow_balloon"],
+      "properties": {
+        "max_mb": { "type": "integer", "minimum": 1 },
+        "allow_balloon": { "type": "boolean" }
+      }
+    },
+    "cpu": {
+      "type": "object",
+      "required": ["vcpus", "cpuid_profile"],
+      "properties": {
+        "vcpus": { "type": "integer", "minimum": 1 },
+        "cpuid_profile": { "type": "string" }
+      }
+    },
+    "network": {
+      "type": "object",
+      "required": ["mode", "egress_policy"],
+      "properties": {
+        "mode": { "type": "string" },
+        "egress_policy": { "type": "string" }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "required": ["cipher", "integrity", "key_version"],
+      "properties": {
+        "cipher": { "type": "string" },
+        "integrity": { "type": "string" },
+        "key_version": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["alg", "key_id"],
+        "properties": {
+          "alg": { "type": "string" },
+          "key_id": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "transition"] }
+        }
+      }
+    }
+  }
+}

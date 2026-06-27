@@ -51,15 +51,33 @@ apps/
   hyper-pn52-doctor/        host-side inventory/security/report CLI
   hyper-uefi-probe/         Rust UEFI probe app
   hyper-slate-kms-prototype/placeholder KMS/attestation simulator
+  hyper-slate-vm-demo/      Phase V0 lifecycle walkthrough (host/QEMU)
 crates/
   hyper-slate-core/         shared manifests, key hierarchy, policy types
   hyper-pn52/               PN52 inventory parsers and report model
   hyper-x86/                no_std x86 substrate: CPU, paging, APIC, PCI
   hyper-amd-svm/            no_std AMD SVM/VMCB/NPT/IOMMU skeleton
   hyper-storage/            encrypted-storage metadata and PQC/hybrid wrapping model
-docs/                       architecture, roadmap, threat model, test plan
+  hyper-receipts/           hash-chained, tamper-evident audit receipts (Slate Runtime §12)
+  hyper-capsule/            VM capsule manifest + Untrusted->Verified type split (§1,§4,§8)
+  hyper-policy/             deny-by-default policy engine: launch + key release (§9)
+  hyper-vm/                 VM lifecycle state machine + dummy vCPU/disk backends (§2,§5)
+docs/                       architecture, roadmap, threat model, test plan, virtual framework
 manifests/                  JSON schemas and sample boot/volume/VM manifests
 scripts/                    lab collection, QEMU, LUKS examples, hashing
+```
+
+## Virtual framework (Slate Runtime) — Phase V0
+
+The `hyper-receipts` / `hyper-capsule` / `hyper-policy` / `hyper-vm` crates are the
+host-testable **Phase V0** of the Slate Runtime (SOW Part B). They drive a signed
+capsule through `Defined → Verified → Prepared → Running → Stopped` with a
+hash-chained receipt log, on dummy backends — no bare metal required. See
+[`docs/09_virtual_framework.md`](docs/09_virtual_framework.md).
+
+```bash
+cargo test -p hyper-receipts -p hyper-capsule -p hyper-policy -p hyper-vm
+cargo run  -p hyper-slate-vm-demo -- manifests/sample.chainvm-capsule.json
 ```
 
 ## Engineering mantra
