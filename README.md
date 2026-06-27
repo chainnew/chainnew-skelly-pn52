@@ -26,6 +26,8 @@ cryptographic module. It deliberately avoids SPI writes and PSP/AGESA/EC modific
 # 1. Review the docs.
 less docs/01_architecture.md
 less docs/05_lab_safety.md
+less docs/06_virtual_framework.md
+less docs/07_defensive_controls.md
 
 # 2. Install Rust targets.
 rustup target add x86_64-unknown-uefi

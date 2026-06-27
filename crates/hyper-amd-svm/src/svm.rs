@@ -1,7 +1,11 @@
 use crate::msr::{rdmsr, wrmsr, EFER, EFER_SVME, VM_HSAVE_PA};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SvmError { NotSupported, VmrunFailed, InvalidVmcb }
+pub enum SvmError {
+    NotSupported,
+    VmrunFailed,
+    InvalidVmcb,
+}
 
 pub unsafe fn enable_svm(host_save_pa: u64) {
     let mut efer = rdmsr(EFER);
@@ -18,4 +22,5 @@ pub unsafe fn vmrun(vmcb_pa: u64) {
 #[cfg(not(target_arch = "x86_64"))]
 pub unsafe fn vmrun(_vmcb_pa: u64) {
     unimplemented!("x86_64 only")
+    panic!("vmrun is only available on x86_64 AMD SVM targets")
 }
