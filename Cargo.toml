@@ -6,6 +6,10 @@ members = [
     "crates/hyper-x86",
     "crates/hyper-amd-svm",
     "crates/hyper-storage",
+    "crates/hyper-receipts",
+    "crates/hyper-policy",
+    "crates/hyper-capsule",
+    "crates/hyper-vm",
     # slate-runtime virtual framework (V0 host-testable layer)
     "crates/hyper-receipts",
     "crates/hyper-capsule",

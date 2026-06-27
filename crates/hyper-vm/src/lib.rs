@@ -1,3 +1,6 @@
+mod model;
+
+pub use model::*;
 //! hyper-vm — the slate-runtime keystone: a VM capsule plus a typed lifecycle
 //! state machine that ties the whole framework together (V0, host-testable).
 //!

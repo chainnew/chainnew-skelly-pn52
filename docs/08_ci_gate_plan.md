@@ -11,6 +11,10 @@ cargo clippy \
   -p hyper-slate-core \
   -p hyper-pn52 \
   -p hyper-storage \
+  -p hyper-receipts \
+  -p hyper-policy \
+  -p hyper-capsule \
+  -p hyper-vm \
   -p hyper-pn52-doctor \
   -p hyper-slate-kms-prototype \
   --all-targets -- -D warnings
@@ -29,11 +33,12 @@ rustup target add x86_64-unknown-uefi
 
 ## Why split the checks?
 
-The workspace has three different classes of crate:
+The workspace has four different classes of crate:
 
 1. host-side tooling;
-2. `no_std` x86 substrate crates;
-3. UEFI application crate.
+2. framework and control-plane crates;
+3. `no_std` x86 substrate crates;
+4. UEFI application crate.
 
 A single naive `cargo test --workspace` is the wrong gate for this repository because the UEFI and bare-metal crates are not normal host binaries.
 

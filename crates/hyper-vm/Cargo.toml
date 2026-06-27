@@ -5,6 +5,10 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
+hyper-capsule = { path = "../hyper-capsule" }
+hyper-policy = { path = "../hyper-policy" }
+hyper-receipts = { path = "../hyper-receipts" }
+serde.workspace = true
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
 thiserror.workspace = true

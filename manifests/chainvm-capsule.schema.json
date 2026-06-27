@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chain.new VM capsule manifest",
+  "type": "object",
+  "required": [
+    "schema",
+    "capsule_id",
+    "vm_id",
+    "image_hash",
+    "disk_hash",
+    "hypervisor_min_version",
+    "boot_policy_version",
+    "devices",
+    "memory",
+    "cpu",
+    "network",
+    "storage",
+    "signatures"
+  ],
+  "properties": {
+    "schema": { "const": "chain.vm_capsule.v1" },
+    "capsule_id": { "type": "string", "minLength": 1 },
+    "vm_id": { "type": "string", "minLength": 1 },
+    "image_hash": { "type": "string", "pattern": "^sha(256|384|512):" },
+    "disk_hash": { "type": "string", "pattern": "^sha(256|384|512):" },
+    "hypervisor_min_version": { "type": "integer", "minimum": 1 },
+    "boot_policy_version": { "type": "integer", "minimum": 1 },
+    "devices": {
+      "type": "object",
+      "required": ["passthrough", "virtio"],
+      "properties": {
+        "passthrough": { "type": "array", "items": { "type": "string" } },
+        "virtio": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "memory": {
+      "type": "object",
+      "required": ["max_mb", "allow_balloon"],
+      "properties": {
+        "max_mb": { "type": "integer", "minimum": 1 },
+        "allow_balloon": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "cpu": {
+      "type": "object",
+      "required": ["vcpus", "cpuid_profile"],
+      "properties": {
+        "vcpus": { "type": "integer", "minimum": 1 },
+        "cpuid_profile": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "network": {
+      "type": "object",
+      "required": ["mode", "egress_policy"],
+      "properties": {
+        "mode": { "type": "string" },
+        "egress_policy": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "storage": {
+      "type": "object",
+      "required": ["cipher", "integrity", "key_version"],
+      "properties": {
+        "cipher": { "type": "string" },
+        "integrity": { "type": "string" },
+        "key_version": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["alg", "key_id", "status"],
+        "properties": {
+          "alg": { "type": "string" },
+          "key_id": { "type": "string" },
+          "status": { "enum": ["active", "transition", "revoked"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
