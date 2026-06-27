@@ -8,6 +8,4 @@ Implementation rule:
 req.previous_receipt_hash = self.receipts.last_hash()
 ```
 
-Then capsule verification may create a manifest-verification receipt that appends cleanly to the chain.
-
-This file exists because a direct source patch was blocked during initial branch construction. The source should be updated before merge if CI catches the receipt-chain handoff issue.
+The public crate re-exports `model.rs`, where this handoff is implemented before capsule verification creates the manifest-verification receipt.
