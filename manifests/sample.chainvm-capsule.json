@@ -1,0 +1,45 @@
+{
+  "schema": "chain.control.capsule.v1",
+  "capsule_id": "cap-debian-dev",
+  "manifest": {
+    "schema": "chain.vm_capsule.v1",
+    "vm_id": "debian-dev",
+    "tenant_id": "lab",
+    "image_hash": "sha384:image-debian-dev",
+    "disk_hash": "sha384:disk-debian-dev",
+    "hypervisor_min_version": 52,
+    "boot_policy_version": 7,
+    "devices": { "passthrough": [], "virtio": ["net0", "blk0", "console0"] },
+    "memory": { "max_mb": 4096, "allow_balloon": false },
+    "cpu": { "vcpus": 2, "cpuid_profile": "masked_zen3_guest_v1" },
+    "network": { "mode": "isolated", "egress_policy": "deny_by_default" },
+    "storage": { "cipher": "aes-256-xts", "integrity": "manifest_hash_only", "key_version": 3 },
+    "signatures": [
+      { "alg": "ecdsa-p384", "key_id": "lab-classical-2026", "status": null }
+    ]
+  },
+  "allowed_key_ids": ["lab-classical-2026"],
+  "boot": {
+    "firmware": "uefi-ovmf-v1",
+    "cmdline": "console=ttyS0",
+    "boot_policy_version": 7
+  },
+  "storage": [{ "disk_id": "blk0", "size_mb": 4096, "read_only": false }],
+  "network": [{ "nic_id": "net0", "mode": "isolated" }],
+  "devices": { "passthrough": [] },
+  "policy": {
+    "tenant_min_boot_policy": 5,
+    "memory_budget_mb": 8192,
+    "key_unwrap_authorized": true,
+    "device_policy_ok": true,
+    "measured_boot": true,
+    "requests_debug_console": false
+  },
+  "key_plan": {
+    "device_id": "dev-blk0",
+    "capsule_hash": "sha384:capsule-local",
+    "boot_policy_hash": "sha384:bootpol-local",
+    "pcrs": { "0": "sha384:p0", "7": "sha384:p7", "11": "sha384:p11" },
+    "nonce": "nonce-debian-0001"
+  }
+}

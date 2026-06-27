@@ -6,9 +6,24 @@ members = [
     "crates/hyper-x86",
     "crates/hyper-amd-svm",
     "crates/hyper-storage",
+    # slate-runtime virtual framework (V0 host-testable layer)
+    "crates/hyper-receipts",
+    "crates/hyper-capsule",
+    "crates/hyper-policy",
+    "crates/hyper-mm",
+    "crates/hyper-attest",
+    "crates/hyper-vcpu",
+    "crates/hyper-devices",
+    "crates/hyper-net",
+    "crates/hyper-virtio",
+    "crates/hyper-vm",
+    "crates/hyper-control",
+    "crates/hyper-qrse",
     "apps/hyper-pn52-doctor",
     "apps/hyper-uefi-probe",
     "apps/hyper-slate-kms-prototype",
+    "apps/hyperctl",
+    "apps/qrsectl",
 ]
 
 [workspace.package]
@@ -24,6 +39,9 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "1"
 sha2 = "0.10"
+hkdf = "0.12"
+hmac = "0.12"
+zeroize = "1"
 hex = "0.4"
 log = "0.4"
 spin = "0.9"
